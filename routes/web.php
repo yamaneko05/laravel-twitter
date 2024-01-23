@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
+use App\Models\Post;
 use App\Models\User;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,13 +18,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth')->group(function () {
+// Route::middleware('auth')->group(function () {
     Route::get('/', function () {
         return redirect('/home');
     });
 
     Route::get('/home', function() {
-        return view('home');
+        $posts = Post::where('parent_post_id', null)->get();
+        return view('home', [
+            'posts' => $posts
+        ]);
     });
 
     Route::get('/profile', function() {
@@ -30,10 +35,14 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('/users/{user}', function(User $user) {
-        
         return view('user', [
-            'user' => $user,
-            'posts' => $posts
+            'user' => $user
+        ]);
+    });
+
+    Route::get('/posts/{post}', function(Post $post) {
+        return view('post', [
+            'post' => $post
         ]);
     });
 
@@ -43,10 +52,10 @@ Route::middleware('auth')->group(function () {
 
 
     Route::post('/logout', [AuthController::class, 'logout']);
-});
+// });
 
 Route::get('/login', function() {
     return view('login');
-});
+})->name('login');
 
 Route::post('/login', [AuthController::class, 'login']);
