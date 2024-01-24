@@ -40,7 +40,11 @@
 		</div>
 	</nav>
 	</header>
-	<main>{{ $slot }}</main>
+	<main>
+		<div class="mx-auto" style="width: 400px;">
+			{{ $slot }}
+		</div>
+	</main>
 	<footer>
 
 	</footer>
